@@ -1,0 +1,79 @@
+-- 1. TABELA DE CLIENTES
+CREATE TABLE tb_cliente (
+    id_cliente SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    telefone VARCHAR(20),
+    cpf_passaporte VARCHAR(30) UNIQUE NOT NULL
+);
+
+-- 2. TABELA DE QUARTOS
+CREATE TABLE tb_quarto (
+    id_quarto SERIAL PRIMARY KEY,
+    numero_quarto VARCHAR(10) UNIQUE NOT NULL,
+    capacidade INT NOT NULL,
+    possui_banheiro BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+-- 3. TABELA DE VAGAS (CAMAS)
+CREATE TABLE tb_vaga (
+    id_vaga SERIAL PRIMARY KEY,
+    id_quarto INT NOT NULL,
+    FOREIGN KEY (id_quarto) REFERENCES tb_quarto(id_quarto) ON DELETE CASCADE
+);
+
+-- 4. TABELA DE CARACTERÍSTICAS DAS VAGAS
+CREATE TABLE tb_caracteristica_vaga (
+    id_caracteristica SERIAL PRIMARY KEY,
+    descricao VARCHAR(50) UNIQUE NOT NULL
+);
+
+INSERT INTO tb_caracteristica_vaga (descricao) VALUES
+('Beliche Superior'),
+('Beliche Inferior'),
+('Perto da Porta'),
+('Perto da Janela'),
+('Sol da Manhã'),
+('Sem Sol');
+
+-- 5. TABELA ASSOCIATIVA: VAGAS E SUAS CARACTERÍSTICAS
+CREATE TABLE tb_vaga_possui_caracteristica (
+    id_vaga INT NOT NULL,
+    id_caracteristica INT NOT NULL,
+    PRIMARY KEY (id_vaga, id_caracteristica),
+    FOREIGN KEY (id_vaga) REFERENCES tb_vaga(id_vaga) ON DELETE CASCADE,
+    FOREIGN KEY (id_caracteristica) REFERENCES tb_caracteristica_vaga(id_caracteristica) ON DELETE CASCADE
+);
+
+-- 6. TABELA DE RESERVAS
+CREATE TABLE tb_reserva (
+    id_reserva SERIAL PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    data_inicio TIMESTAMP NOT NULL,
+    data_fim TIMESTAMP NOT NULL,
+    preco_total NUMERIC(10, 2) NOT NULL,
+    status_reserva VARCHAR(20) NOT NULL DEFAULT 'confirmada',
+    data_limite_cancelamento TIMESTAMP NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente) ON DELETE RESTRICT
+);
+
+-- 7. TABELA ASSOCIATIVA: RESERVAS E VAGAS
+CREATE TABLE tb_reserva_vaga (
+    id_reserva INT NOT NULL,
+    id_vaga INT NOT NULL,
+    PRIMARY KEY (id_reserva, id_vaga),
+    FOREIGN KEY (id_reserva) REFERENCES tb_reserva(id_reserva) ON DELETE CASCADE,
+    FOREIGN KEY (id_vaga) REFERENCES tb_vaga(id_vaga) ON DELETE RESTRICT
+);
+
+-- 8. TABELA DE PAGAMENTOS
+CREATE TABLE tb_pagamento (
+    id_pagamento SERIAL PRIMARY KEY,
+    id_reserva INT NOT NULL,
+    metodo_pagamento VARCHAR(30) NOT NULL DEFAULT 'cartao_credito',
+    token_cartao VARCHAR(255) NOT NULL,
+    valor NUMERIC(10, 2) NOT NULL,
+    data_pagamento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status_pagamento VARCHAR(20) NOT NULL DEFAULT 'pago',
+    FOREIGN KEY (id_reserva) REFERENCES tb_reserva(id_reserva) ON DELETE CASCADE
+);  
