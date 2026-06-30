@@ -1,0 +1,83 @@
+-- 1. tb_cliente
+-- Inclusão
+INSERT INTO tb_cliente (nome, email, telefone, cpf_passaporte) 
+VALUES ('João da Silva', 'joao@email.com', '21999999999', '12345678900');
+-- Seleção
+SELECT * FROM tb_cliente WHERE id_cliente = 1;
+-- Alteração
+UPDATE tb_cliente SET telefone = '21888888888' WHERE id_cliente = 1;
+-- Exclusão
+DELETE FROM tb_cliente WHERE id_cliente = 1;
+
+-- 2. tb_quarto
+-- Inclusão
+INSERT INTO tb_quarto (numero_quarto, capacidade, possui_banheiro) 
+VALUES ('101', 4, TRUE);
+-- Seleção
+SELECT * FROM tb_quarto WHERE possui_banheiro = TRUE;
+-- Alteração
+UPDATE tb_quarto SET capacidade = 8 WHERE id_quarto = 1;
+-- Exclusão
+DELETE FROM tb_quarto WHERE id_quarto = 1;
+
+-- 3. tb_vaga
+-- Inclusão
+INSERT INTO tb_vaga (id_quarto) VALUES (1);
+-- Seleção
+SELECT * FROM tb_vaga WHERE id_quarto = 1;
+-- Alteração (Movendo a vaga para outro quarto)
+UPDATE tb_vaga SET id_quarto = 2 WHERE id_vaga = 1;
+-- Exclusão
+DELETE FROM tb_vaga WHERE id_vaga = 1;
+
+-- 4. tb_caracteristica_vaga
+-- Inclusão
+INSERT INTO tb_caracteristica_vaga (descricao) VALUES ('Cama Extra');
+-- Seleção
+SELECT * FROM tb_caracteristica_vaga;
+-- Alteração
+UPDATE tb_caracteristica_vaga SET descricao = 'Cama Queen' WHERE id_caracteristica = 1;
+-- Exclusão
+DELETE FROM tb_caracteristica_vaga WHERE id_caracteristica = 1;
+
+-- 5. tb_vaga_possui_caracteristica
+-- Inclusão
+INSERT INTO tb_vaga_possui_caracteristica (id_vaga, id_caracteristica) VALUES (1, 3); -- ex: Perto da porta
+-- Seleção
+SELECT * FROM tb_vaga_possui_caracteristica WHERE id_vaga = 1;
+-- Alteração 
+UPDATE tb_vaga_possui_caracteristica SET id_caracteristica = 4 WHERE id_vaga = 1 AND id_caracteristica = 3;
+-- Exclusão
+DELETE FROM tb_vaga_possui_caracteristica WHERE id_vaga = 1 AND id_caracteristica = 4;
+
+-- 6. tb_reserva
+-- Inclusão (Lembre-se que começam e terminam ao meio-dia)
+INSERT INTO tb_reserva (id_cliente, data_inicio, data_fim, preco_total, status_reserva, data_limite_cancelamento) 
+VALUES (1, '2024-12-10 12:00:00', '2024-12-15 12:00:00', 250.00, 'confirmada', '2024-12-07 12:00:00');
+-- Seleção
+SELECT * FROM tb_reserva WHERE status_reserva = 'confirmada';
+-- Alteração (Cancelando a reserva)
+UPDATE tb_reserva SET status_reserva = 'cancelada' WHERE id_reserva = 1;
+-- Exclusão
+DELETE FROM tb_reserva WHERE id_reserva = 1;
+
+-- 7. tb_reserva_vaga
+-- Inclusão
+INSERT INTO tb_reserva_vaga (id_reserva, id_vaga) VALUES (1, 1);
+-- Seleção
+SELECT * FROM tb_reserva_vaga WHERE id_reserva = 1;
+-- Alteração (Trocando a vaga da reserva)
+UPDATE tb_reserva_vaga SET id_vaga = 2 WHERE id_reserva = 1 AND id_vaga = 1;
+-- Exclusão
+DELETE FROM tb_reserva_vaga WHERE id_reserva = 1 AND id_vaga = 2;
+
+-- 8. tb_pagamento
+-- Inclusão
+INSERT INTO tb_pagamento (id_reserva, metodo_pagamento, token_cartao, valor, status_pagamento) 
+VALUES (1, 'cartao_credito', 'tok_abc123', 250.00, 'pago');
+-- Seleção
+SELECT * FROM tb_pagamento WHERE id_reserva = 1;
+-- Alteração
+UPDATE tb_pagamento SET status_pagamento = 'reembolsado' WHERE id_pagamento = 1;
+-- Exclusão
+DELETE FROM tb_pagamento WHERE id_pagamento = 1;
