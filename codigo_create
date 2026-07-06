@@ -57,8 +57,9 @@ CREATE TABLE tb_reserva (
     FOREIGN KEY (id_cliente) REFERENCES tb_cliente(id_cliente) ON DELETE RESTRICT
 );
 
--- 7. TABELA ASSOCIATIVA: RESERVAS E VAGAS
-CREATE TABLE tb_reserva_vaga (
+
+-- 7. TABELA ASSOCIATIVA: ITENS DA RESERVA
+CREATE TABLE tb_item_reserva (
     id_reserva INT NOT NULL,
     id_vaga INT NOT NULL,
     PRIMARY KEY (id_reserva, id_vaga),
