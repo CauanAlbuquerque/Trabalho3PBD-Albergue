@@ -7,13 +7,12 @@ FROM tb_vaga v
 JOIN tb_quarto q ON v.id_quarto = q.id_quarto
 LEFT JOIN tb_vaga_possui_caracteristica vpc ON v.id_vaga = vpc.id_vaga
 LEFT JOIN tb_caracteristica_vaga c ON vpc.id_caracteristica = c.id_caracteristica
-WHERE v.id_vaga NOT IN (
+LEFT JOIN (
     SELECT ir.id_vaga
     FROM tb_item_reserva ir
     JOIN tb_reserva r ON ir.id_reserva = r.id_reserva
     WHERE r.status_reserva = 'confirmada'
-    AND (
-        r.data_inicio < '2024-12-15 12:00:00'
-        AND r.data_fim > '2024-12-10 12:00:00'
-    )
-);
+      AND r.data_inicio < '2024-12-15 12:00:00'
+      AND r.data_fim > '2024-12-10 12:00:00'
+) AS ocupadas ON v.id_vaga = ocupadas.id_vaga
+WHERE ocupadas.id_vaga IS NULL;
